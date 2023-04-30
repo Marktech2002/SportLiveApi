@@ -1,25 +1,23 @@
 const express = require('express');
 const router = express.Router();
+const { getFootballScores , scoresById , getFootballSchedule ,schedulesById ,getFootballStandings , standingsById ,getFballTeamsDetailsById ,getPlayerDetails } = require("../controllers/footballController")
 
 //routes scores 
 router.get('/scores', getFootballScores);
-router.get('/scores/:teamId', getFootballById);
+router.get('/scores/:teamId', scoresById);
 
 //routes schedule
 router.get('/schedules' , getFootballSchedule);
-router.get('/schedules/:teamId', getFootballScheduleById);
+router.get('/schedules/:teamId', schedulesById);
 
 //routes Standings
-router.get('/standings' , getFootballSchedule);
-router.get('/standings/:teamId', getFootballScheduleById);
+router.get('/standings' , getFootballStandings);
+router.get('/standings/:teamId', standingsById);
 
 // routes team details 
 router.get('/team/:teamId' , getFballTeamsDetailsById);
 
 //router player details
-router.get('/players/:playerId' , getPlayerDetails)
+router.get('/player/:playerId' , getPlayerDetails)
 
-// user favourites 
-router.get('/favourites' , userFavourite);
-router.post('/favorites' , addToFavourite);
-router.delete('/favourites/:id ' , removeFromFavourites)
+module.exports = router ;
