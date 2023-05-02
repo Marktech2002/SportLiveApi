@@ -1,8 +1,18 @@
 
+const expressAsyncHandler = require('express-async-handler');
+const request = require('request');
+const { getGames ,getGameById } = require("../service/basketBallSchedules")(request);
 //@desc get scores
 //@route GET basketball/scores
 //@access Public
 const getBasketballScores = (req , res) => {
+    res.send("get Basketballscores")
+}
+
+//@desc get scores
+//@route GET basketball/scores
+//@access Public
+const getAllTeams = (req , res) => {
     res.send("get Basketballscores")
 }
 //@desc get scores by Id
@@ -16,16 +26,34 @@ const scoresById = (req , res) => {
 //@route GET basketball/schedules/
 //@access Public
 
-const getBasketballSchedule = (req , res) => {
-    res.send("get BasketballSchedules")
+const getBasketballSchedule = async (req , res) => {
+    getGames((err, response) => {
+        if (err) {
+          console.log(err);
+          return res.status(500).json({ message: 'Error fetching games' });
+        }  
+        // console.log(response.data[0].id)
+        return res.status(200).json(response);
+      }); 
 }
 
 //@desc get schedules by id
 //@route GET basketball/schedules/:teamId
 //@access Public
-const schedulesById = (req , res) => {
-    res.send("get Basketballschedules by id")
-}
+const schedulesById = expressAsyncHandler( async (req , res) => {
+   try {
+     const gameId = req.params.teamId;
+     console.log(gameId)
+     if(!gameId) {
+      res.status(400)
+      throw new Error("misisnf")
+     }
+    const game = await getGameById(gameId);
+    res.status(400).json(game)
+   } catch (error) {
+    res.status(400).json({ error : error.message })
+   }
+}) 
 
 //@desc get standings 
 //@route GET basketball/standing
@@ -46,7 +74,7 @@ const standingsById = (req , res) => {
 //@route GET basketball/team/:teamId
 //@access Public
 
-const getTeamsDetailsById = (req , res) => {
+const getTeamById = (req , res) => {
     res.send("get Basketball Teams details ")
 }
 
@@ -64,6 +92,7 @@ module.exports = {
    schedulesById ,
    getBasketballStandings ,
    standingsById ,
-   getTeamsDetailsById ,
+   getAllTeams,
+   getTeamById ,
    getPlayerDetails ,
 }

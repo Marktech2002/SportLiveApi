@@ -5,7 +5,7 @@ const { protectUser } = require("../middlewares/authMiddleware");
 // user register , login and get user
 router.post('/sign-up', registerUser);
 router.post('/login', loginUser);
-router.get('/me', getUser);
+router.get('/me', protectUser, getUser);
 
 //user favourites 
 router.get('/favourites', getUserFavoriteTeams);
