@@ -1,7 +1,7 @@
 
 const scheduleRequest = (request) => {
     //get all game or schedules
-    const getGames = async ( callback ) => {
+    const getGames = async (callback) => {
         const options = {
             method: 'GET',
             url: 'https://free-nba.p.rapidapi.com/games',
@@ -17,14 +17,14 @@ const scheduleRequest = (request) => {
         request(options, function (error, response, body) {
             if (error) {
                 return callback(error, null);
-              }
-              const respons = JSON.parse(body);
-              return callback(null, respons);;
+            }
+            const respons = JSON.parse(body);
+            return callback(null, respons);;
         });
     }
 
     // get a game or schedules by id
-    const getGameById = async (id) => {
+    const getGameById = async (id, mycallback) => {
         const options = {
             method: 'GET',
             url: `https://free-nba.p.rapidapi.com/games/${id}`,
@@ -37,16 +37,13 @@ const scheduleRequest = (request) => {
                 'X-RapidAPI-Host': 'free-nba.p.rapidapi.com'
             },
         }
-        console.log(options.url)
-        request(options , function (error, response ,body){
-            if(error) {
-             throw new Error(error)
-            }
-            const respon = JSON.parse(body);
-            // console.log(respon);
-        });
+        console.log(options.url);
+        const callback = (error, body) => {
+            return mycallback(error, body);
+        };
+        request(options, callback);
     };
-    return { getGames , getGameById};
+    return { getGames, getGameById };
 };
 
-module.exports = scheduleRequest ;
+module.exports = scheduleRequest;
