@@ -18,6 +18,7 @@ router.get('/standings/:teamId', standingsById);
 router.get('/team/' , getAllTeams);
 router.get('/team/:teamId' , getTeamById);
 
+
 //router player details
 router.get('/player/:playerId' , getPlayerDetails)
 

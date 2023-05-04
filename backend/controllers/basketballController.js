@@ -59,13 +59,12 @@ const getTeamById = async (req, res) => {
 //@route GET basketball/scores/:teamId
 //@access Public
 const scoresById = (req, res) => {
-    res.send("get Basketballscores by id")
+    res.status(400).send("get Basketballscores by id")
 }
 
 //@desc get schedules
 //@route GET basketball/schedules/
 //@access Public
-
 const getBasketballSchedule = async (req, res) => {
     getGames((err, response) => {
         if (err) {
