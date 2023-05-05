@@ -94,8 +94,9 @@ const getUserFavoriteTeams = (req, res) => {
 //@desc delete from user favourites
 //@route DELETE user/favourites
 //@access Private
-const addToFavorites = (req, res) => {
-    res.send("register");
+const addToFavorites = async (req, res) => {
+    const { teamId , sport } = req.body;
+    res.send("Add to favorites");
 }
 //@desc add to user favourites
 //@route POST user/favourites

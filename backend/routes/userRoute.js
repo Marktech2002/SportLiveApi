@@ -10,6 +10,6 @@ router.get('/me', protectUser, getUser);
 //user favourites 
 router.get('/favourites', getUserFavoriteTeams);
 router.post('/favourites', addToFavorites);
-router.delete('/favorites/:id',removeFromFavorites);
+router.delete('/favorites/:id', removeFromFavorites);
 
 module.exports = router ;
