@@ -8,8 +8,8 @@ router.post('/login', loginUser);
 router.get('/me', protectUser, getUser);
 
 //user favourites 
-router.get('/favourites', getUserFavoriteTeams);
-router.post('/favourites', addToFavorites);
-router.delete('/favorites/:id', removeFromFavorites);
+router.get('/favourites', protectUser , getUserFavoriteTeams);
+router.post('/favourites', protectUser, addToFavorites);
+router.delete('/favorites/:id', protectUser , removeFromFavorites);
 
 module.exports = router ;

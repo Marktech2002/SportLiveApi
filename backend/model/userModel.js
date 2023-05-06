@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-
 const userScheme = mongoose.Schema({
     name: {
         type: String,
@@ -22,12 +21,12 @@ const userScheme = mongoose.Schema({
         required: [true, "Please provide your passowrd"],
     },
     favoriteFootballTeams: {
-        type: [mongoose.Schema.Types.ObjectId],
+        type: [ String ],
         ref: 'FootballTeam',
         default: []
       },
       favoriteBasketballTeams: {
-        type: [mongoose.Schema.Types.ObjectId],
+        type: [ String ],
         ref: 'BasketballTeam',
         default: []
       },

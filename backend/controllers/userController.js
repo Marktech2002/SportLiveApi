@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const asyncHandler = require('express-async-handler');
 const User = require("../model/userModel");
+const { default: mongoose } = require("mongoose");
 
 //@desc register a user
 //@route POST user/sign-up
@@ -33,7 +34,7 @@ const registerUser = asyncHandler(async (req, res) => {
             _id: user.id,
             name: user.name,
             email: user.email,
-            token : generateToken(user.id)
+            token: generateToken(user.id)
         });
     }
     else {
@@ -47,7 +48,7 @@ const registerUser = asyncHandler(async (req, res) => {
 //@access Public
 const loginUser = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
-     if (!email || !password) {
+    if (!email || !password) {
         res.status(400)
         throw new Error("Invalid credentails")
     }
@@ -57,13 +58,13 @@ const loginUser = asyncHandler(async (req, res) => {
             _id: user.id,
             name: user.name,
             email: user.email,
-            token : generateToken(user.id), 
+            token: generateToken(user.id),
         })
     }
     else {
         res.status(400)
         throw new Error("Invalid credentails")
-    } 
+    }
 });
 
 //@desc register a user
@@ -80,37 +81,85 @@ const getUser = asyncHandler(async (req, res) => {
         })
     }
     else {
-        res.status(400).json({message : `${error.message}`})
-    }  
+        res.status(400).json({ message: `${error.message}` })
+    }
 })
 
 
 //@desc get user favourites
 //@route GET user/favourites
 //@access Private
-const getUserFavoriteTeams = (req, res) => {
+const getUserFavoriteTeams = async (req, res) => {
     res.send("register");
 }
 //@desc delete from user favourites
 //@route DELETE user/favourites
 //@access Private
 const addToFavorites = async (req, res) => {
-    const { teamId , sport } = req.body;
-    res.send("Add to favorites");
+    const { teamId, sport } = req.body;
+    console.log(teamId, "teamId")
+    if (!teamId || !sport) {
+        res.status(400).json({
+            msg: "Invalid Credentials",
+            status: "Invalid",
+        });
+    }
+    try {
+        const user = await User.findById(req.user.id).select('-password');
+        if (!user) {
+            res.status(400).json({
+                msg: "User not found",
+                status: "Invalid",
+            })
+        }
+        if (sport?.toLowerCase() === "football") {
+            if (!user.favoriteFootballTeams) {
+                user.favoriteFootballTeams = {};
+            }
+            user.favoriteFootballTeams.push(String(teamId));
+        }
+        else if (sport?.toLowerCase() === "basketball") {
+            if (!user.favoriteBasketballTeams) {
+                user.favoriteBasketballTeams = [];
+            }
+            user.favoriteBasketballTeams.push(String(teamId));
+        }
+        else {
+            res.status(400).json({ msg: "Invalid Sport", });
+        }
+        await user.save();
+        res.status(200).json({
+            user,
+            msg: "Teams added succefully"
+        })
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
 }
 //@desc add to user favourites
 //@route POST user/favourites
 //@access Private
-const removeFromFavorites = (req, res) => {
+const removeFromFavorites = async (req, res) => {
+    const { id } = req.params;
+    if(!id ) {
+        res.status(400).json('No id')
+    }
+    const user = User.findById(req.user.id).select('-password') ;
+    if (user) {
+        
+    }
+
     res.send("register");
 }
 
 
 //generate a token 
 const generateToken = (id) => {
-   return jwt.sign({ id } , process.env.JWT_SECRET , {
-       expiresIn : '30d',
-   });
+    return jwt.sign({ id }, process.env.JWT_SECRET, {
+        expiresIn: '30d',
+    });
 }
 module.exports = {
     loginUser,
